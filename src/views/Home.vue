@@ -30,9 +30,18 @@ export default {
   setup() {
     const data = ref(null);
     
+    const fetchData = async () => {
+      await fetch("http://localhost:5000/inventory")
+        .then((res) => res.json())
+        .then((res) => (data.value = res));
+
+        addIdToObject();
+        let ID = data.value.map(d => d.id)
+        // console.log(ID)
+    };
 
     function addIdToObject (){
-      data.value.forEach(item => item.id = Math.floor(Math.random() * 10000000))
+      data.value.forEach(item => item.id = Math.floor(Math.random() * 10000000000))
     }
    
     const store = useStore();
@@ -46,15 +55,7 @@ export default {
       store.commit('DECREMENT')
     }
     
-     const fetchData = async () => {
-      await fetch("http://localhost:5000/inventory")
-        .then((res) => res.json())
-        .then((res) => (data.value = res));
-
-        addIdToObject();
-        let ID = data.value.map(d => d.id)
-        // console.log(ID)
-    };
+     
 
     function addToCart(data) {
       store.commit("ADD_TO_CART", data);
@@ -63,7 +64,7 @@ export default {
 
     onMounted(() => {
       fetchData()
-      // setTimeout(() => {addIdToObject(); console.log('addId', data.value)}, 3000)
+
     });
     return {
       data,

@@ -23,6 +23,15 @@ export default createStore({
       }
       updateLocalStorage(state.cart)
   },
+  // fetchQuote({}) {
+  //   if (localStorage.getItem("saved-quote")) {
+  //     try {
+  //       return JSON.parse(localStorage.getItem("saved-quote"));
+  //     } catch (e) {
+  //       localStorage.removeItem("saved-quote");
+  //     }
+  //   }
+  // },
 
   INCREMENT(state){
     state.count ++
