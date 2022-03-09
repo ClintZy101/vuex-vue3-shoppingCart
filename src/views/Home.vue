@@ -1,7 +1,7 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-
+<Header :cartQty="cartQty"/>
     <!-- Product Card -->
     <div class="container" v-for="(product, index) in data" :key="index">
       <div>{{ product.Item }}</div>
@@ -24,47 +24,50 @@ import { computed, onMounted } from "@vue/runtime-core";
 import { ref } from "@vue/reactivity";
 // import data from '../assets/data.json'
 import { useStore } from "vuex";
+import Header from "../components/Header.vue";
 
 export default {
   name: "Home",
+  components: {
+    Header,
+  },
   setup() {
     const data = ref(null);
-    
+    const store = useStore();
+    const counter = computed(() => store.state.count);
+    const cartQty = computed(() => store.state.cartCount)
+
+     function addIdToObject() {
+      data.value.forEach(
+        (item) => (item.id = Math.floor(Math.random() * 10000 * Date.now()))
+      );
+    }
+
     const fetchData = async () => {
       await fetch("http://localhost:5000/inventory")
         .then((res) => res.json())
         .then((res) => (data.value = res));
 
-        addIdToObject();
-        let ID = data.value.map(d => d.id)
-        // console.log(ID)
+      addIdToObject();
+      let ID = data.value.map((d) => d.id);
+      console.log(ID)
     };
-
-    function addIdToObject (){
-      data.value.forEach(item => item.id = Math.floor(Math.random() * 10000000000))
-    }
-   
-    const store = useStore();
-    const counter = computed(() => store.state.count);
 
 
     const increment = () => {
-      store.commit('INCREMENT')
-    }
-    const decrement=()=>{
-      store.commit('DECREMENT')
-    }
-    
-     
+      store.commit("INCREMENT");
+    };
+    const decrement = () => {
+      store.commit("DECREMENT");
+    };
 
     function addToCart(data) {
       store.commit("ADD_TO_CART", data);
-      // console.log(store.state.cart)
+      console.log(store.state.cartCount)
     }
 
     onMounted(() => {
-      fetchData()
-
+      fetchData();
     });
     return {
       data,
@@ -72,6 +75,7 @@ export default {
       increment,
       decrement,
       addToCart,
+      cartQty
     };
   },
 };

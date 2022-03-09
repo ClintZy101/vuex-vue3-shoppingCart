@@ -1,9 +1,8 @@
 <template>
   <div class="cart">
-    <h1>Products</h1>
-    <div>
-      {{ totalQty }}
-    </div>
+    <h1>Products: {{ totalQty }}</h1>
+
+
     <div>
       <div v-for="product in products" :key="product.id">
         <h1>{{ product.Item }}</h1>
@@ -32,6 +31,7 @@ export default {
     const store = useStore();
 
     const products = ref([]);
+    const totalQty = store.state.cartCount
 
     function getProducts() {
       if (store.state.cart) {
@@ -46,18 +46,18 @@ export default {
     //   product.value = productInCart
     // }
 
-    const totalQty = ref(0);
-    function getTotalQty() {
-      if (store.state.length) {
-        let cartQty = cart
-          .map((item) => item.quantity)
-          .reduce((prev, next) => prev + next);
-        totalQty.value = cartQty;
-      }
-    }
+    // const totalQty = ref(0);
+    // function getTotalQty() {
+    //   if (store.state.length) {
+    //     let cartQty = cart
+    //       .map((item) => item.quantity)
+    //       .reduce((prev, next) => prev + next);
+    //     totalQty.value = cartQty;
+    //   }
+    // }
 
     getProducts();
-    getTotalQty();
+    // getTotalQty();
 
     
     return {

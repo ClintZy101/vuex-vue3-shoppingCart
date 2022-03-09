@@ -2,22 +2,29 @@
   <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/cart">
-    Cart
-    <span >({{ totalQty }})</span>
-    </router-link>
+      Cart
+    </router-link> |
+    <router-link :to="{name: 'Users'}">Users</router-link>
+
   </div>
-  <router-view/>
+  <router-view />
 </template>
 
 <script>
 import { ref } from "@vue/reactivity";
 
 import { useStore } from "vuex";
+import { onMounted, onUpdated } from "@vue/runtime-core";
+
 
 export default {
+  components:{
+
+  },
   setup() {
     const store = useStore();
     const cart = store.state.cart;
+    const cartQty = store.state.cartCount
     const totalQty = ref(0);
 
     function getTotalQty() {
@@ -25,14 +32,19 @@ export default {
         let cartQty = cart
           .map((item) => item.quantity)
           .reduce((prev, next) => prev + next);
-          totalQty.value = cartQty
+        totalQty.value = cartQty;
+        console.log(totalQty);
       }
     }
-
-  getTotalQty();
-
+    onMounted(() => {
+      getTotalQty();
+      console.log('App onmount')
+    });
+  
+console.log('cartQty',cartQty)
     return {
       totalQty,
+      cartQty
     };
   },
 };

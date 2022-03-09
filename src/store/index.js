@@ -7,7 +7,8 @@ function updateLocalStorage(cart){
 export default createStore({
   state: {
     cart: [],
-    count: 0
+    count: 0,
+    cartCount: 0
   },
  
   mutations: {
@@ -22,6 +23,11 @@ export default createStore({
           state.cart.push({...product, quantity:1})
       }
       updateLocalStorage(state.cart)
+      let productQuantity = state.cart.map(p => p.quantity)
+      let totalQuantity = productQuantity.reduce((prev, next) => prev + next)
+      state.cartCount = totalQuantity
+      // console.log('state Count',state.cartCount)
+      // console.log(state.cart.map(p => p.quantity))
   },
   // fetchQuote({}) {
   //   if (localStorage.getItem("saved-quote")) {
