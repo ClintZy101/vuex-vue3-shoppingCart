@@ -1,18 +1,14 @@
 <template>
   <div class="home">
     <h1>Home</h1>
-<Header :cartQty="cartQty"/>
+    <Header :cartQty="cartQty" />
     <!-- Product Card -->
     <div class="container" v-for="(product, index) in data" :key="index">
       <div>{{ product.Item }}</div>
       <div>{{ product.Description }}</div>
       <div>{{ product.Quantity }}</div>
       <div>{{ product.Cost }}</div>
-      <div>
-        <button @click="increment">Add</button>
-        <span>{{ counter }}</span>
-        <button @click="decrement">Minus</button>
-      </div>
+
       <button class="btn" @click="addToCart(product)">Add to Cart</button>
       <hr />
     </div>
@@ -34,48 +30,37 @@ export default {
   setup() {
     const data = ref(null);
     const store = useStore();
-    const counter = computed(() => store.state.count);
-    const cartQty = computed(() => store.state.cartCount)
-
-     function addIdToObject() {
-      data.value.forEach(
-        (item) => (item.id = Math.floor(Math.random() * 10000 * Date.now()))
-      );
-    }
+    // The ideal standard dealing with computed properties should be done in the vuex store using "getters"
+    const cartQty = computed(() => store.state.cartCount);
 
     const fetchData = async () => {
       await fetch("http://localhost:5000/inventory")
         .then((res) => res.json())
         .then((res) => (data.value = res));
-
+        // this function should not be applied when getting id/data from the database. There could be conflict with id on client side and the serverside
+      function addIdToObject() {
+        data.value.forEach(
+          (item) => (item.id = Math.floor(Math.random() * 10000 * Date.now()))
+        );
+      }
       addIdToObject();
       let ID = data.value.map((d) => d.id);
-      console.log(ID)
-    };
-
-
-    const increment = () => {
-      store.commit("INCREMENT");
-    };
-    const decrement = () => {
-      store.commit("DECREMENT");
+      console.log(ID);
     };
 
     function addToCart(data) {
       store.commit("ADD_TO_CART", data);
-      console.log(store.state.cartCount)
+      console.log(store.state.cartCount);
     }
+
 
     onMounted(() => {
       fetchData();
     });
     return {
       data,
-      counter,
-      increment,
-      decrement,
       addToCart,
-      cartQty
+      cartQty,
     };
   },
 };

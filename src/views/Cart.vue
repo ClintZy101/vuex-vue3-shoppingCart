@@ -1,11 +1,18 @@
 <template>
   <div class="cart">
-    <h1>Products: {{ totalQty }}</h1>
-
+    <h1 v-bind:style="{ fontSize: '20px' }">Products: {{ totalQty }}</h1>
+    <h1 v-bind:style="{ fontSize: '20px' }">cartQty: {{ cartQty }}</h1>
 
     <div>
-      <div v-for="product in products" :key="product.id">
-        <h1>{{ product.Item }}</h1>
+      <div class="product" v-for="product in products" :key="product.id">
+        <h1 v-bind:style="{ fontSize: '15px' }">{{ product.Item }}</h1>
+        <h1 v-bind:style="{ fontSize: '10px' }">{{ product.Description }}</h1>
+        
+        <div class="buttons">
+          <button @click="increment(product)">Add</button>
+          <span>{{ counter }}</span>
+          <button>Minus</button>
+        </div>
       </div>
 
       <!-- <ProductInCart 
@@ -22,6 +29,7 @@ import ProductInCart from "../components/ProductInCart.vue";
 import { ref } from "@vue/reactivity";
 
 import { useStore } from "vuex";
+import { computed } from '@vue/runtime-core';
 
 export default {
   components: {
@@ -29,9 +37,13 @@ export default {
   },
   setup() {
     const store = useStore();
-
+    const counter = ref(0);
     const products = ref([]);
-    const totalQty = store.state.cartCount
+    
+    const totalQty = store.state.cartCount;
+
+    const cartQty = computed(()=>store.getters.totalQuantity)
+    
 
     function getProducts() {
       if (store.state.cart) {
@@ -56,15 +68,36 @@ export default {
     //   }
     // }
 
+    function increment(item) {
+      store.commit('INCREMENT_PRODUCT_QTY', item)
+    }
+
     getProducts();
     // getTotalQty();
 
-    
     return {
       totalQty,
+      cartQty,
       products,
+      counter,
+      increment,
     };
   },
 };
 </script>
 
+<style scoped>
+.product {
+  border: 1px solid;
+  border-radius: 5px;
+  width: 200px;
+  height: max-content;
+  margin: auto;
+  padding: 3px;
+  padding-bottom: 5px;
+  margin-bottom: 5px;
+}
+.buttons > button {
+  margin: 5px 0;
+}
+</style>
