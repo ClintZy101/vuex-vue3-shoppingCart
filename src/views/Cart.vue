@@ -11,7 +11,7 @@
         
         <div class="buttons">
           <button @click="increment(product)">Add</button>
-          <span>{{ product.Quantity }}</span>
+          <span>{{ product.count }}</span>
           <button @click="decrement(product)">Minus</button>
         </div>
       </div>
@@ -41,7 +41,7 @@ export default {
     const counter = ref(0);
     const products = ref([]);
   
-    const cartQty = computed(() => store.state.cartCount) 
+    const cartQty = computed(() => store.getters.cartLength) 
     const productQty =computed(() => store.getters.productQuantity) 
 
     function getProducts() {

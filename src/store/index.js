@@ -29,6 +29,13 @@ export default createStore({
     },
     products(state){
       return state.products
+    },
+    cartLength(state){
+      let cartCount = state.cart.map(c => c.count)
+      if (cartCount.length){
+        return cartCount.reduce((prev, next) => prev + next)
+      }
+       else return 0
     }
 
   },
@@ -41,9 +48,10 @@ export default createStore({
     ADD_TO_CART(state, data) {
       let item = state.cart.find(i => i.id === data.id)
       if (item) {
-        item.Quantity++
+        item.count++
       } else {
-        state.cart.push({ ...data, Quantity: 1 })
+        state.cart.push({ ...data, count: 1 })
+        // console.log(state.cart.map(c => c.count))
       }
       updateLocalStorage(state.cart)
 
@@ -55,17 +63,17 @@ export default createStore({
 
     INCREMENT_PRODUCT_QTY(state, product) {
      let item = state.cart.find(i => i.id === product.id)
-      item.Quantity++
-      console.log(item.Quantity)
+      item.count++
+      console.log(item.count)
     },
     DECREMENT_PRODUCT_QTY(state, product) {
       let item = state.cart.find(i => i.id === product.id)
       
-      if (item.Quantity === 0) {
+      if (item.count === 0) {
         alert('Count is already Zero')
-        return item.Quantity = 0
+        return item.count= 0
       } else {
-         item.Quantity-- 
+         item.count-- 
       }
     }
   },
