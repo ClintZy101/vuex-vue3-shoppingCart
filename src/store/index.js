@@ -11,31 +11,22 @@ export default createStore({
     cartCount: 0
   },
   getters: {
-    // productQuantity: state => product => {
-    //   const item = state.cart.find(i => i.id === product.id)
-    //   if (item) return item.quantity
-    //   else return null
-    // },
-    totalQuantity(state){
-      if(state.cart.length >= 1){
-        let itemQuantity = state.cart.map(item => item.quantity)
-        let cartTotal = itemQuantity.reduce((prev, next) => prev + next)
-        return cartTotal
-      } else return 0
-     
-    },
-    productQuantity(state, product){
-    return product.quantity
-    },
+  
     products(state){
       return state.products
     },
+   
     cartLength(state){
       let cartCount = state.cart.map(c => c.count)
       if (cartCount.length){
         return cartCount.reduce((prev, next) => prev + next)
       }
        else return 0
+    },
+    cartTotal(state){
+      let total = 0
+      state.cart.forEach(item => total += item.Price * item.count)
+      return total
     }
 
   },
@@ -51,13 +42,8 @@ export default createStore({
         item.count++
       } else {
         state.cart.push({ ...data, count: 1 })
-        // console.log(state.cart.map(c => c.count))
       }
       updateLocalStorage(state.cart)
-
-      // let productQuantity = state.cart.map(p => p.Quantity)
-      // let totalQuantity = productQuantity.reduce((prev, next) => prev + next)
-      // state.cartCount = totalQuantity
 
     },
 
@@ -83,7 +69,6 @@ export default createStore({
     //   const json = JSON.stringify(state.quotes);
     //   localStorage.setItem("saved-quotes", json);
     // },
-   
     fetchProducts({commit}) {
       return fetch("http://localhost:5000/inventory")
         .then((response) => response.json())

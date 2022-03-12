@@ -1,6 +1,7 @@
 <template>
   <div class="cart">
     <h1 v-bind:style="{ fontSize: '20px' }">Products in Cart: {{ cartQty }}</h1>
+    <h1 v-bind:style="{ fontSize: '20px' }">Cart Total: {{ cartTotal }}</h1>
 
 
     <div>
@@ -43,6 +44,7 @@ export default {
   
     const cartQty = computed(() => store.getters.cartLength) 
     const productQty =computed(() => store.getters.productQuantity) 
+    const cartTotal = computed(()=> store.getters.cartTotal)
 
     function getProducts() {
       if (store.state.cart) {
@@ -52,21 +54,7 @@ export default {
       }
     }
 
-    // function getProduct() {
-    //   let productInCart = store.state.cart.map(p => p)
-    //   product.value = productInCart
-    // }
-
-    // const totalQty = ref(0);
-    // function getTotalQty() {
-    //   if (store.state.length) {
-    //     let cartQty = cart
-    //       .map((item) => item.quantity)
-    //       .reduce((prev, next) => prev + next);
-    //     totalQty.value = cartQty;
-    //   }
-    // }
-
+  
     function increment(item) {
       store.commit('INCREMENT_PRODUCT_QTY', item)
     }
@@ -79,6 +67,7 @@ export default {
 
     return {
       cartQty,
+      cartTotal,
       productQty,
       products,
       counter,

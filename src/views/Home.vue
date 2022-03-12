@@ -7,7 +7,7 @@
       <div>{{ product.Item }}</div>
       <div>{{ product.Description }}</div>
       <div>{{ product.Quantity }}</div>
-      <div>{{ product.Cost }}</div>
+      <div>Php{{ product.Cost }}</div>
 
       <button class="btn" @click="addToCart(product)">Add to Cart</button>
       <hr />
@@ -33,7 +33,8 @@ export default {
     // The ideal standard dealing with computed properties should be done in the vuex store using "getters"
     const cartQty = computed(() => store.getters.cartLength);
     const data = computed(() => store.state.products);
- 
+
+    
     function fetchData() {
       store.dispatch("fetchProducts");
       console.log(data)
