@@ -28,31 +28,33 @@ export default {
     Header,
   },
   setup() {
-    const data = ref(null);
+    // const data = ref(null);
     const store = useStore();
     // The ideal standard dealing with computed properties should be done in the vuex store using "getters"
     const cartQty = computed(() => store.state.cartCount);
-
-    const fetchData = async () => {
-      await fetch("http://localhost:5000/inventory")
-        .then((res) => res.json())
-        .then((res) => (data.value = res));
-        // this function should not be applied when getting id/data from the database. There could be conflict with id on client side and the serverside
-      function addIdToObject() {
-        data.value.forEach(
-          (item) => (item.id = Math.floor(Math.random() * 10000 * Date.now()))
-        );
-      }
-      addIdToObject();
-      let ID = data.value.map((d) => d.id);
-      console.log(ID);
-    };
-
+    const data = computed(() => store.state.products);
+    // const fetchData = async () => {
+    //   await fetch("http://localhost:5000/inventory")
+    //     .then((res) => res.json())
+    //     .then((res) => (data.value = res));
+    //     // this function should not be applied when getting id/data from the database. There could be conflict with id on client side and the serverside
+    //   function addIdToObject() {
+    //     data.value.forEach(
+    //       (item) => (item.id = Math.floor(Math.random() * 10000 * Date.now()))
+    //     );
+    //   }
+    //   addIdToObject();
+    //   let ID = data.value.map((d) => d.id);
+    //   console.log(ID);
+    // };
+    function fetchData() {
+      store.dispatch("fetchProducts");
+      console.log(data)
+    }
     function addToCart(data) {
       store.commit("ADD_TO_CART", data);
-      console.log(store.state.cartCount);
+      console.log(data.value);
     }
-
 
     onMounted(() => {
       fetchData();

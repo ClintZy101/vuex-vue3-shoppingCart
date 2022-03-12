@@ -1,17 +1,18 @@
 <template>
   <div class="cart">
-    <h1 v-bind:style="{ fontSize: '20px' }">Products: {{ totalQty }}</h1>
-    <h1 v-bind:style="{ fontSize: '20px' }">cartQty: {{ cartQty }}</h1>
+    <h1 v-bind:style="{ fontSize: '20px' }">Products in Cart: {{ cartQty }}</h1>
+
 
     <div>
       <div class="product" v-for="product in products" :key="product.id">
         <h1 v-bind:style="{ fontSize: '15px' }">{{ product.Item }}</h1>
         <h1 v-bind:style="{ fontSize: '10px' }">{{ product.Description }}</h1>
+        <!-- <p>{{product.quantity}}</p> -->
         
         <div class="buttons">
           <button @click="increment(product)">Add</button>
-          <span>{{ counter }}</span>
-          <button>Minus</button>
+          <span>{{ product.Quantity }}</span>
+          <button @click="decrement(product)">Minus</button>
         </div>
       </div>
 
@@ -39,11 +40,9 @@ export default {
     const store = useStore();
     const counter = ref(0);
     const products = ref([]);
-    
-    const totalQty = store.state.cartCount;
-
-    const cartQty = computed(()=>store.getters.totalQuantity)
-    
+  
+    const cartQty = computed(() => store.state.cartCount) 
+    const productQty =computed(() => store.getters.productQuantity) 
 
     function getProducts() {
       if (store.state.cart) {
@@ -71,16 +70,20 @@ export default {
     function increment(item) {
       store.commit('INCREMENT_PRODUCT_QTY', item)
     }
+    function decrement(item) {
+      store.commit('DECREMENT_PRODUCT_QTY', item)
+    }
 
     getProducts();
     // getTotalQty();
 
     return {
-      totalQty,
       cartQty,
+      productQty,
       products,
       counter,
       increment,
+      decrement,
     };
   },
 };
